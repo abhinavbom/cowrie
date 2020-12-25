@@ -39,7 +39,7 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
         @return Pretty representation of this object as a string
         @rtype: L{str}
         """
-        return "SSH Transport to {}".format(self.transport.getPeer().host)
+        return "Cowrie SSH Transport to {}".format(self.transport.getPeer().host)
 
     def connectionMade(self):
         """
@@ -54,7 +54,7 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
             src_ip = ipv4_search.group(1)
 
         log.msg(
-            eventid='session.connect',
+            eventid='cowrie.session.connect',
             format="New connection: %(src_ip)s:%(src_port)s (%(dst_ip)s:%(dst_port)s) [session: %(session)s]",
             src_ip=src_ip,
             src_port=self.transport.getPeer().port,
@@ -100,7 +100,7 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
             if b'\n' not in self.buf:
                 return
             self.otherVersionString = self.buf.split(b'\n')[0].strip()
-            log.msg(eventid='client.version', version=repr(self.otherVersionString),
+            log.msg(eventid='cowrie.client.version', version=repr(self.otherVersionString),
                     format="Remote SSH version: %(version)s")
             m = re.match(br'SSH-(\d+.\d+)-(.*)', self.otherVersionString)
             if m is None:
@@ -178,7 +178,7 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
             cmp=ccompCS)
         hassh = md5(hasshAlgorithms.encode('utf-8')).hexdigest()
 
-        log.msg(eventid='client.kex',
+        log.msg(eventid='cowrie.client.kex',
                 format="SSH client hassh fingerprint: %(hassh)s",
                 hassh=hassh,
                 hasshAlgorithms=hasshAlgorithms,
@@ -222,7 +222,7 @@ class HoneyPotSSHTransport(transport.SSHServerTransport, TimeoutMixin):
         self.transport.connectionLost(reason)
         self.transport = None
         duration = time.time() - self.startTime
-        log.msg(eventid='session.closed',
+        log.msg(eventid='cowrie.session.closed',
                 format="Connection lost after %(duration)d seconds",
                 duration=duration)
 

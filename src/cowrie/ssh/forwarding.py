@@ -20,7 +20,7 @@ def cowrieOpenConnectForwardingClient(remoteWindow, remoteMaxPacket, data, avata
     """
     remoteHP, origHP = forwarding.unpackOpen_direct_tcpip(data)
 
-    log.msg(eventid='direct-tcpip.request',
+    log.msg(eventid='cowrie.direct-tcpip.request',
             format='direct-tcp connection request to %(dst_ip)s:%(dst_port)s from %(src_ip)s:%(src_port)s',
             dst_ip=remoteHP[0], dst_port=remoteHP[1],
             src_ip=origHP[0], src_port=origHP[1])
@@ -37,7 +37,7 @@ def cowrieOpenConnectForwardingClient(remoteWindow, remoteMaxPacket, data, avata
                 redirects[int(destPort)] = (redirectHP[0], int(redirectHP[1]))
         if remoteHP[1] in redirects:
             remoteHPNew = redirects[remoteHP[1]]
-            log.msg(eventid='direct-tcpip.redirect',
+            log.msg(eventid='cowrie.direct-tcpip.redirect',
                     format='redirected direct-tcp connection request from %(src_ip)s:%(src_port)' +
                            'd to %(dst_ip)s:%(dst_port)d to %(new_ip)s:%(new_port)d',
                     new_ip=remoteHPNew[0], new_port=remoteHPNew[1],
@@ -57,7 +57,7 @@ def cowrieOpenConnectForwardingClient(remoteWindow, remoteMaxPacket, data, avata
                 tunnels[int(destPort)] = (tunnelHP[0], int(tunnelHP[1]))
         if remoteHP[1] in tunnels:
             remoteHPNew = tunnels[remoteHP[1]]
-            log.msg(eventid='direct-tcpip.tunnel',
+            log.msg(eventid='cowrie.direct-tcpip.tunnel',
                     format='tunneled direct-tcp connection request %(src_ip)s:%(src_port)' +
                            'd->%(dst_ip)s:%(dst_port)d to %(new_ip)s:%(new_port)d',
                     new_ip=remoteHPNew[0], new_port=remoteHPNew[1],
@@ -75,7 +75,7 @@ class SSHConnectForwardingChannel(forwarding.SSHConnectForwardingChannel):
     """
     This class modifies the original to close the connection
     """
-    name = b'forwarded-direct-tcpip'
+    name = b'cowrie-forwarded-direct-tcpip'
 
     def eofReceived(self):
         self.loseConnection()
@@ -85,13 +85,13 @@ class FakeForwardingChannel(forwarding.SSHConnectForwardingChannel):
     """
     This channel does not forward, but just logs requests.
     """
-    name = b'discarded-direct-tcpip'
+    name = b'cowrie-discarded-direct-tcpip'
 
     def channelOpen(self, specificData):
         pass
 
     def dataReceived(self, data):
-        log.msg(eventid='direct-tcpip.data',
+        log.msg(eventid='cowrie.direct-tcpip.data',
                 format='discarded direct-tcp forward request %(id)s to %(dst_ip)s:%(dst_port)s with data %(data)s',
                 dst_ip=self.hostport[0], dst_port=self.hostport[1], data=repr(data), id=self.id)
         self._close("Connection refused")
@@ -101,7 +101,7 @@ class TCPTunnelForwardingChannel(forwarding.SSHConnectForwardingChannel):
     """
     This class modifies the original to perform TCP tunneling via the CONNECT method
     """
-    name = b'tunneled-direct-tcpip'
+    name = b'cowrie-tunneled-direct-tcpip'
 
     def __init__(self, hostport, dstport, *args, **kw):
         """
@@ -121,7 +121,7 @@ class TCPTunnelForwardingChannel(forwarding.SSHConnectForwardingChannel):
         forwarding.SSHConnectForwardingChannel.dataReceived(self, connect_hdr)
 
     def dataReceived(self, data):
-        log.msg(eventid='tunnelproxy-tcpip.data',
+        log.msg(eventid='cowrie.tunnelproxy-tcpip.data',
                 format='sending via tunnel proxy %(data)s',
                 data=repr(data))
         forwarding.SSHConnectForwardingChannel.dataReceived(self, data)
