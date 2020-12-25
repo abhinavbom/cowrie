@@ -18,4 +18,3 @@ root:x:!/honeypot/i
 root:x:*
 tomcat:x:*
 oracle:x:*
-admin:x:*
