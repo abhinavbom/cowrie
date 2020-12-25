@@ -26,7 +26,7 @@
 # environment
 #
 # (default: svr04)
-hostname = svr04
+hostname = devserver
 
 
 # Directory where to save log files in.
@@ -406,7 +406,7 @@ processes = share/cowrie/cmdoutput.json
 # is chosen at login time.
 # (default: linux-x64-lsb)
 
-arch = linux-x64-lsb
+arch = linux-aarch64-lsb
 
 # Here the list of supported OS-ARCH-ENDIANESS executables
 # bsd-aarch64-lsb:	    64-bit	LSB	ARM aarch64 version 1 (SYSV)
@@ -475,8 +475,8 @@ arch = linux-x64-lsb
 
 # Modify the response of '/bin/uname'
 # Default (uname -a): Linux <hostname> <kernel_version> <kernel_build_string> <hardware_platform> <operating system>
-kernel_version = 3.2.0-4-amd64
-kernel_build_string = #1 SMP Debian 3.2.68-1+deb7u1
+kernel_version = 3.3.1-4-amd64
+kernel_build_string = #1 SMP Debian 3.3.68-1+deb7u1
 hardware_platform = x86_64
 operating_system = GNU/Linux
 
@@ -529,7 +529,7 @@ dsa_private_key = ${honeypot:state_path}/ssh_host_dsa_key
 # SSH-2.0-OpenSSH_5.9
 #
 # (default: "SSH-2.0-OpenSSH_6.0p1 Debian-4+deb7u2")
-version = SSH-2.0-OpenSSH_6.0p1 Debian-4+deb7u2
+version = SSH-2.0-OpenSSH_5.9
 
 # Cipher encryption algorithms to be used.
 #
@@ -715,7 +715,7 @@ muc = hacker_room
 # JSON based logging module
 #
 [output_jsonlog]
-enabled = true
+enabled = false
 logfile = ${honeypot:log_path}/cowrie.json
 epoch_timestamp = false
 
@@ -874,9 +874,9 @@ debug=false
 # You must signup for an api key.
 #
 [output_virustotal]
-enabled = false
-api_key = 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-upload = True
+enabled = True
+api_key = 78c6ff5f0973d41a5cd07cd51c36e38d4a01051cfbd76e2b4f460b5637be66c5
+upload = False
 debug = False
 scan_file = True
 scan_url = False
@@ -978,7 +978,7 @@ send_method = lpush
 
 # Perform Reverse DNS lookup
 [output_reversedns]
-enabled = false
+enabled = True
 # Timeout in seconds
 timeout = 3
 
